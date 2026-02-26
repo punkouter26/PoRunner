@@ -7,7 +7,19 @@ using System.Text.Json.Serialization;
 var builder = WebApplication.CreateBuilder(args);
 
 // ── Application Insights (connection string via Key Vault reference in App Service) ──
-builder.Services.AddApplicationInsightsTelemetry();
+var appInsightsConnectionString = builder.Configuration["APPLICATIONINSIGHTS_CONNECTION_STRING"];
+var hasValidAppInsightsConnection =
+    !string.IsNullOrWhiteSpace(appInsightsConnectionString)
+    && appInsightsConnectionString.Contains("InstrumentationKey=", StringComparison.OrdinalIgnoreCase);
+
+if (hasValidAppInsightsConnection)
+{
+    builder.Services.AddApplicationInsightsTelemetry();
+}
+else
+{
+    Console.WriteLine("[Startup] APPLICATIONINSIGHTS_CONNECTION_STRING is missing or invalid. Application Insights telemetry is disabled.");
+}
 
 // Add services to the container.
 builder.Services.AddControllers();
