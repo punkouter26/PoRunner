@@ -7,11 +7,16 @@
 //   Role assignment      – Storage Table Data Contributor → web app MI on storage
 // ─────────────────────────────────────────────────────────────────────────────
 
-@description('Location. Must match asp-poshared-linux location (westus2).')
+@description('Location. Must match asp-porunner-dedicated location (westus2).')
 param location string = 'westus2'
 
 @description('App Service name — must be globally unique across Azure.')
 param webAppName string = 'wa-porunner'
+
+resource sharedLinuxPlan 'Microsoft.Web/serverfarms@2024-04-01' existing = {
+  scope: resourceGroup('PoShared')
+  name: 'asp-porunner-dedicated'
+}
 
 // Storage account names: lowercase, 3-24 chars, globally unique
 var uniqueSuffix = substring(uniqueString(resourceGroup().id), 0, 8)
@@ -53,7 +58,7 @@ resource webApp 'Microsoft.Web/sites@2024-04-01' = {
   }
   properties: {
     // Cross-RG reference to the existing shared Linux App Service Plan in PoShared
-    serverFarmId: resourceId('PoShared', 'Microsoft.Web/serverfarms', 'asp-poshared-linux')
+    serverFarmId: sharedLinuxPlan.id
     httpsOnly: true
     siteConfig: {
       linuxFxVersion: 'DOTNETCORE|10.0'

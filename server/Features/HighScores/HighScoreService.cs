@@ -32,7 +32,7 @@ public class HighScoreService : IHighScoreService
     private const string Partition = "banana";
     private const int MaxScores = 10;
 
-    private readonly TableClient _table;
+    private readonly TableClient? _table;
     private readonly ILogger<HighScoreService> _log;
 
     public HighScoreService(IConfiguration configuration, ILogger<HighScoreService> log)
@@ -43,20 +43,26 @@ public class HighScoreService : IHighScoreService
         var accountName   = configuration["AzureStorage:AccountName"];
         var accountKey    = configuration["AzureStorage:AccountKey"];
 
+        if (string.IsNullOrWhiteSpace(tableEndpoint))
+        {
+            _log.LogError("[HighScores] Missing AzureStorage:TableEndpoint. High score persistence is disabled for this instance.");
+            return;
+        }
+
         TableServiceClient svc;
 
         if (!string.IsNullOrEmpty(accountKey) && !string.IsNullOrEmpty(accountName))
         {
             // Local development: use Azurite shared-key auth
             var credential = new TableSharedKeyCredential(accountName, accountKey);
-            svc = new TableServiceClient(new Uri(tableEndpoint!), credential);
+            svc = new TableServiceClient(new Uri(tableEndpoint), credential);
             _log.LogInformation("[HighScores] Using shared-key auth (local Azurite) → {endpoint}", tableEndpoint);
         }
         else
         {
             // Production: use Managed Identity via DefaultAzureCredential
             // The App Service system-assigned MI has Storage Table Data Contributor on the storage account
-            svc = new TableServiceClient(new Uri(tableEndpoint!), new DefaultAzureCredential());
+            svc = new TableServiceClient(new Uri(tableEndpoint), new DefaultAzureCredential());
             _log.LogInformation("[HighScores] Using DefaultAzureCredential (Managed Identity) → {endpoint}", tableEndpoint);
         }
 
@@ -76,6 +82,12 @@ public class HighScoreService : IHighScoreService
 
     public async Task SaveScoreAsync(long timeMs)
     {
+        if (_table is null)
+        {
+            _log.LogWarning("[HighScores] Skipping save because table client is not initialized.");
+            return;
+        }
+
         var rowKey = $"{timeMs:D15}_{Guid.NewGuid():N}";
         var entity = new HighScoreEntity { PartitionKey = Partition, RowKey = rowKey, TimeMs = timeMs };
 
@@ -96,6 +108,12 @@ public class HighScoreService : IHighScoreService
 
     public async Task<List<HighScoreEntry>> GetTopScoresAsync()
     {
+        if (_table is null)
+        {
+            _log.LogWarning("[HighScores] Returning empty score list because table client is not initialized.");
+            return new List<HighScoreEntry>();
+        }
+
         var all = await FetchAllAsync();
         all.Sort((a, b) => a.TimeMs.CompareTo(b.TimeMs));
         return all.Take(MaxScores)
