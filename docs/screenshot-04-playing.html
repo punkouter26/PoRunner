@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banana Game - Playing</title>
+    <style>
+        :root {
+            --bg-dark: #111827;
+            --bg-gradient: linear-gradient(180deg, #1e3c72 0%, #2a5298 50%, #165a34 100%);
+            --text-main: #f9fafb;
+            --yellow: #fcd34d;
+            --accent: #10b981;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg-gradient);
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text-main);
+        }
+        
+        #gameCanvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            image-rendering: pixelated;
+            display: block;
+        }
+        
+        .hud {
+            position: absolute;
+            top: 40px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            pointer-events: none;
+            z-index: 100;
+        }
+        
+        .timer {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--yellow);
+            text-shadow: 0 0 20px rgba(252, 211, 77, 0.5);
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="gameCanvas"></canvas>
+    <div class="hud">
+        <div class="timer">00:05.234</div>
+    </div>
+    
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        
+        window.addEventListener('resize', () => {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        });
+        
+        // Simple banana game visualization
+        function drawBananaGame() {
+            // Sky gradient
+            const skyGrad = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.6);
+            skyGrad.addColorStop(0, '#1e3c72');
+            skyGrad.addColorStop(1, '#2a5298');
+            ctx.fillStyle = skyGrad;
+            ctx.fillRect(0, 0, canvas.width, canvas.height * 0.6);
+            
+            // Ground
+            ctx.fillStyle = '#165a34';
+            ctx.fillRect(0, canvas.height * 0.6, canvas.width, canvas.height * 0.4);
+            
+            // Finish line
+            const finishX = canvas.width - 150;
+            ctx.strokeStyle = '#fcd34d';
+            ctx.lineWidth = 4;
+            ctx.setLineDash([10, 10]);
+            ctx.beginPath();
+            ctx.moveTo(finishX, canvas.height * 0.4);
+            ctx.lineTo(finishX, canvas.height);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Start line
+            const startX = 150;
+            ctx.strokeStyle = '#fcd34d';
+            ctx.lineWidth = 4;
+            ctx.setLineDash([10, 10]);
+            ctx.beginPath();
+            ctx.moveTo(startX, canvas.height * 0.4);
+            ctx.lineTo(startX, canvas.height);
+            ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Player 1 banana (yellow) - ahead
+            const player1X = canvas.width * 0.6;
+            ctx.fillStyle = '#fcd34d';
+            ctx.beginPath();
+            ctx.ellipse(player1X, canvas.height * 0.55, 40, 50, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(player1X - 15, canvas.height * 0.45, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(player1X + 15, canvas.height * 0.45, 5, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Player 2 banana (blue) - behind
+            const player2X = canvas.width * 0.4;
+            ctx.fillStyle = '#93c5fd';
+            ctx.beginPath();
+            ctx.ellipse(player2X, canvas.height * 0.55, 40, 50, 0, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.fillStyle = '#000';
+            ctx.beginPath();
+            ctx.arc(player2X - 15, canvas.height * 0.45, 5, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(player2X + 15, canvas.height * 0.45, 5, 0, Math.PI * 2);
+            ctx.fill();
+        }
+        
+        drawBananaGame();
+    </script>
+</body>
+</html>

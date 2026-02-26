@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🍌 Banana Game</title>
+  <link rel="stylesheet" href="/style.css" />
+</head>
+
+<body>
+  <div id="game-container">
+    <canvas id="gameCanvas"></canvas>
+
+    <div id="ui-layer">
+
+      <!-- Error Screen -->
+      <div id="ui-error" class="screen hidden">
+        <div class="glassmorphism" style="text-align:center;">
+          <h2 id="error-title">⚠️ Connection Error</h2>
+          <p id="error-message">Unable to connect to server.</p>
+          <button id="btn-reconnect" class="btn primary pulse">RECONNECT</button>
+        </div>
+      </div>
+
+      <!-- Waiting Screen -->
+      <div id="ui-waiting" class="screen hidden">
+        <div class="glassmorphism" style="text-align:center;">
+          <h1 class="glow-text">🍌 Waiting</h1>
+          <p>Searching for opponent...</p>
+          <div class="spinner"></div>
+          <p class="blink">Looking for a player&hellip;</p>
+          <hr style="margin:1rem 0;opacity:0.3;" />
+          <p style="opacity:0.75;margin-bottom:0.5rem;">Or race solo while you wait:</p>
+          <button id="btn-ready-solo" class="btn primary pulse">RACE SOLO!</button>
+        </div>
+      </div>
+
+      <!-- Ready Check Screen -->
+      <div id="ui-readycheck" class="screen hidden">
+        <div class="glassmorphism" style="text-align:center;">
+          <h1 class="glow-text">🎮 Ready Up!</h1>
+          <p>Type <strong style="color:#fcd34d;">T → Y → G → H</strong> repeatedly to run to the finish!</p>
+          <button id="btn-ready" class="btn primary pulse">READY!</button>
+          <p id="ready-status-text" class="status-text hidden">✅ Ready! Waiting for opponent&hellip;</p>
+        </div>
+      </div>
+
+      <!-- Countdown Screen -->
+      <div id="ui-countdown" class="screen hidden">
+        <p id="countdown-text" class="huge-text glow-text">3</p>
+      </div>
+
+      <!-- Playing HUD -->
+      <div id="ui-playing" class="hud hidden">
+        <div id="hud-timer" class="time-score">0.000s</div>
+        <div class="controls-hint">
+          <div class="icon-keyboard">⌨️</div>
+          <p id="combo-display">Type <span id="combo-T" class="combo-key next">T</span> <span id="combo-Y" class="combo-key">Y</span> <span id="combo-G" class="combo-key">G</span> <span id="combo-H" class="combo-key">H</span> to run!</p>
+        </div>
+      </div>
+
+      <!-- Game Over Screen -->
+      <div id="ui-gameover" class="screen shadow-bg hidden">
+        <div class="glassmorphism" style="text-align:center;">
+          <div style="font-size:5rem; animation: bounceHint 1s infinite ease-in-out;">🏆</div>
+          <h1 class="glow-text victory">VICTORY!</h1>
+          <h2 id="winner-text" class="glow-text">YELLOW WINS!</h2>
+          <div id="final-time-text" class="time-score">0.000s</div>
+          <button id="btn-restart" class="btn primary pulse">PLAY AGAIN</button>
+          <div id="leaderboard" class="leaderboard">
+            <h3 class="leaderboard-title">🏅 Top 10 Best Times</h3>
+            <table class="leaderboard-table">
+              <tbody id="leaderboard-body">
+                <tr><td colspan="2" style="opacity:0.5;padding:0.5rem;">Loading…</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <script type="module" src="/main.js"></script>
+</body>
+
+</html>

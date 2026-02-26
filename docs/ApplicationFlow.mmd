@@ -1,0 +1,53 @@
+flowchart TD
+    A["Player Opens App"] --> B["Browser Loads index.html"]
+    B --> C["Vite Loads main.js + style.css"]
+    C --> D["SignalR Connection Established"]
+    D --> E{Connection Success?}
+    E -->|No| F["Display Error Screen"]
+    E -->|Yes| G["Show Waiting Room"]
+    F --> H["Retry Connection"]
+    H --> D
+    G --> I{Player Ready?}
+    I -->|No| J["Show Ready Check"]
+    I -->|Yes| K["Select Color"]
+    J --> K
+    K --> L["Submit Ready State"]
+    L --> M{All Players Ready?}
+    M -->|No| N["Wait for Partner"]
+    N --> M
+    M -->|Yes| O["Start Countdown"]
+    O --> P["Display Countdown: 3...2...1..."]
+    P --> Q["Race Starts"]
+    Q --> R["Draw Canvas + Update Positions"]
+    R --> S{Player at Finish?}
+    S -->|No| T["Receive gameState from Server"]
+    T --> R
+    S -->|Yes| U["Show Game Over Screen"]
+    U --> V["Display Winner + Time"]
+    V --> W["Show Restart/Reconnect Buttons"]
+    W --> X{Player Action?}
+    X -->|Restart| G
+    X -->|Reconnect| D
+    style A fill:#fff3e0,stroke:#e65100,color:#000
+    style B fill:#fff3e0,stroke:#e65100,color:#000
+    style C fill:#fff3e0,stroke:#e65100,color:#000
+    style D fill:#fff3e0,stroke:#e65100,color:#000
+    style E fill:#fff9c4,stroke:#f57f17,color:#000
+    style F fill:#ffebee,stroke:#c62828,color:#000
+    style G fill:#e8f5e9,stroke:#1b5e20,color:#000
+    style I fill:#fff9c4,stroke:#f57f17,color:#000
+    style J fill:#ede7f6,stroke:#311b92,color:#000
+    style K fill:#ede7f6,stroke:#311b92,color:#000
+    style L fill:#ede7f6,stroke:#311b92,color:#000
+    style M fill:#fff9c4,stroke:#f57f17,color:#000
+    style N fill:#fce4ec,stroke:#880e4f,color:#000
+    style O fill:#e0f2f1,stroke:#004d40,color:#000
+    style P fill:#e0f2f1,stroke:#004d40,color:#000
+    style Q fill:#e0f2f1,stroke:#004d40,color:#000
+    style R fill:#e8f5e9,stroke:#1b5e20,color:#000
+    style S fill:#fff9c4,stroke:#f57f17,color:#000
+    style T fill:#fff3e0,stroke:#e65100,color:#000
+    style U fill:#ffebee,stroke:#c62828,color:#000
+    style V fill:#ffebee,stroke:#c62828,color:#000
+    style W fill:#ffebee,stroke:#c62828,color:#000
+    style X fill:#fff9c4,stroke:#f57f17,color:#000

@@ -1,0 +1,13 @@
+[    2116ms] TypeError: Cannot read properties of null (reading 'addEventListener')
+    at http://localhost:5173/main.js:101:14
+[    2144ms] [ERROR] Failed to load resource: the server responded with a status of 404 (Not Found) @ http://localhost:5173/favicon.ico:0
+[    2285ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:5173/gamehub/negotiate?negotiateVersion=1:0
+[    2290ms] [ERROR] [2026-02-24T04:27:14.090Z] Error: Failed to complete negotiation with the server: Error: Internal Server Error: Status code '500' @ http://localhost:5173/node_modules/.vite/deps/@microsoft_signalr.js?v=2eec40ec:297
+[    2290ms] [ERROR] [2026-02-24T04:27:14.090Z] Error: Failed to start the connection: Error: Failed to complete negotiation with the server: Error: Internal Server Error: Status code '500' @ http://localhost:5173/node_modules/.vite/deps/@microsoft_signalr.js?v=2eec40ec:297
+[    2290ms] [ERROR] FailedToNegotiateWithServerError: Failed to complete negotiation with the server: Error: Internal Server Error: Status code '500'
+    at HttpConnection._getNegotiationResponse (http://localhost:5173/node_modules/.vite/deps/@microsoft_signalr.js?v=2eec40ec:2359:29)
+    at async HttpConnection._startInternal (http://localhost:5173/node_modules/.vite/deps/@microsoft_signalr.js?v=2eec40ec:2286:31)
+    at async HttpConnection.start (http://localhost:5173/node_modules/.vite/deps/@microsoft_signalr.js?v=2eec40ec:2214:5)
+    at async _HubConnection._startInternal (http://localhost:5173/node_modules/.vite/deps/@microsoft_signalr.js?v=2eec40ec:993:5)
+    at async _HubConnection._startWithStateTransitions (http://localhost:5173/node_modules/.vite/deps/@microsoft_signalr.js?v=2eec40ec:973:7)
+    at async start (http://localhost:5173/main.js:91:9) @ http://localhost:5173/main.js:95

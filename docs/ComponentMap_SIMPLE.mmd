@@ -1,0 +1,25 @@
+flowchart TD
+    subgraph Frontend["Frontend"]
+        canvas["Canvas Render"]
+        ui["UI States"]
+        input["Input Events"]
+    end
+    
+    subgraph Backend["Backend"]
+        hub["SignalR Hub"]
+        mgr["Session Manager"]
+    end
+    
+    canvas --> ui
+    input --> hub
+    hub --> mgr
+    mgr --> hub
+    canvas --> hub
+    
+    style Frontend fill:#fff3e0,stroke:#e65100,color:#000,stroke-width:2px
+    style Backend fill:#e8f5e9,stroke:#1b5e20,color:#000,stroke-width:2px
+    style canvas fill:#ffccbc,stroke:#d84315,color:#000
+    style ui fill:#ffccbc,stroke:#d84315,color:#000
+    style input fill:#ffccbc,stroke:#d84315,color:#000
+    style hub fill:#c8e6c9,stroke:#2e7d32,color:#000
+    style mgr fill:#c8e6c9,stroke:#2e7d32,color:#000

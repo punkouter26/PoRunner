@@ -1,0 +1,15 @@
+flowchart TD
+    A["Connect to Server"] --> B["Wait for Partner"]
+    B --> C["Ready Check"]
+    C --> D["Countdown"]
+    D --> E["Race"]
+    E --> F{Winner?}
+    F -->|Yes| G["Game Over"]
+    F -->|No| E
+    style A fill:#fff3e0,stroke:#e65100,color:#000
+    style B fill:#e8f5e9,stroke:#1b5e20,color:#000
+    style C fill:#ede7f6,stroke:#311b92,color:#000
+    style D fill:#e0f2f1,stroke:#004d40,color:#000
+    style E fill:#e8f5e9,stroke:#1b5e20,color:#000
+    style F fill:#fff9c4,stroke:#f57f17,color:#000
+    style G fill:#ffebee,stroke:#c62828,color:#000

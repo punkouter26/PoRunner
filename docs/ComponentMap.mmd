@@ -1,0 +1,46 @@
+flowchart TD
+    subgraph Frontend["Frontend Architecture"]
+        canvas["Canvas Engine<br/>- Render loop<br/>- Draw players<br/>- Animation frame"]
+        ui["UI Manager<br/>- Error screen<br/>- Ready check<br/>- Countdown<br/>- Game Over"]
+        input["Input Handler<br/>- Keyboard events<br/>- Color selection<br/>- Ready button"]
+        audio["Audio Engine<br/>- Sound effects<br/>- Web Audio API"]
+    end
+    
+    subgraph Backend["Backend Architecture"]
+        gamehub["GameHub<br/>- SignalR Hub<br/>- Connection mgmt<br/>- Broadcasts state"]
+        sessionmgr["GameSessionManager<br/>- Room management<br/>- Player tracking<br/>- State machine"]
+        models["Game Models<br/>- GameRoom<br/>- Player<br/>- GameStatus"]
+        gameloop["Game Loop<br/>- Server tick 100ms<br/>- Status updates<br/>- Broadcasts"]
+    end
+    
+    subgraph Assets["Static Assets"]
+        sprites["Sprite Sheets<br/>- Character standing<br/>- Walking frames<br/>- Jumping frames"]
+        metadata["Metadata JSON<br/>- Animation defs<br/>- Directions<br/>- Frame counts"]
+    end
+    
+    canvas --> ui
+    input --> ui
+    audio --> canvas
+    canvas <-->|State Updates| gamehub
+    input -->|PlayerReady, SelectColor| gamehub
+    gamehub -->|SendAsync gameState| canvas
+    gamehub --> sessionmgr
+    sessionmgr --> gameloop
+    gameloop --> gamehub
+    sessionmgr --> models
+    canvas --> sprites
+    metadata --> gamehub
+    
+    style Frontend fill:#fff3e0,stroke:#e65100,color:#000,stroke-width:3px
+    style Backend fill:#e8f5e9,stroke:#1b5e20,color:#000,stroke-width:3px
+    style Assets fill:#fce4ec,stroke:#880e4f,color:#000,stroke-width:3px
+    style canvas fill:#ffccbc,stroke:#d84315,color:#000
+    style ui fill:#ffccbc,stroke:#d84315,color:#000
+    style input fill:#ffccbc,stroke:#d84315,color:#000
+    style audio fill:#ffccbc,stroke:#d84315,color:#000
+    style gamehub fill:#c8e6c9,stroke:#2e7d32,color:#000
+    style sessionmgr fill:#c8e6c9,stroke:#2e7d32,color:#000
+    style models fill:#c8e6c9,stroke:#2e7d32,color:#000
+    style gameloop fill:#c8e6c9,stroke:#2e7d32,color:#000
+    style sprites fill:#f8bbd0,stroke:#ad1457,color:#000
+    style metadata fill:#f8bbd0,stroke:#ad1457,color:#000

@@ -1,0 +1,22 @@
+erDiagram
+    GAME_ROOM ||--o{ PLAYER : contains
+    PLAYER ||--o{ ANIMATION_STATE : manages
+    
+    GAME_ROOM {
+        string roomId PK
+        string status
+    }
+    
+    PLAYER {
+        string connectionId PK
+        string roomId FK
+        string color
+        float x
+        float y
+    }
+    
+    ANIMATION_STATE {
+        string playerId PK
+        string animation
+        int frame
+    }

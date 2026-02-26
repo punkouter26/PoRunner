@@ -1,0 +1,24 @@
+C4Context
+    title Banana Game - System Context (Azure Deployment)
+    Person(player, "Player", "Uses Banana Game in browser")
+    System_Boundary(b1, "Banana Game Platform") {
+        Container(client, "Frontend Client", "Vite + JavaScript", "Renders game canvas, manages UI state")
+        Container(server, "Game Server", ".NET 10 / SignalR", "Session management, game state sync")
+        Container(storage, "Static Assets", "CDN / Blob Storage", "Character sprites, animations, metadata")
+        Container(db, "Game Sessions", "In-Memory State", "Active rooms, player data, game progress")
+    }
+    System_Ext(azure, "Azure Infrastructure", "App Service, SignalR Service, Storage, Monitor")
+    Rel(player, client, "Interacts via WebSocket & HTTP")
+    Rel(client, server, "Sends input, receives state via SignalR")
+    Rel(server, storage, "Reads sprite/animation metadata")
+    Rel(server, db, "Manages session state")
+    Rel(server, azure, "Logs to Application Insights")
+    Rel(client, storage, "Loads character sprites & animations")
+    Rel(storage, azure, "Hosted on Azure Storage")
+    style player fill:#e1f5ff,stroke:#01579b,color:#000
+    style b1 fill:#f3e5f5,stroke:#4a148c,color:#000
+    style client fill:#fff3e0,stroke:#e65100,color:#000
+    style server fill:#e8f5e9,stroke:#1b5e20,color:#000
+    style storage fill:#fce4ec,stroke:#880e4f,color:#000
+    style db fill:#ede7f6,stroke:#311b92,color:#000
+    style azure fill:#e0f2f1,stroke:#004d40,color:#000

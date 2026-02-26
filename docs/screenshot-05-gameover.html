@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banana Game - Game Over</title>
+    <style>
+        :root {
+            --bg-dark: #111827;
+            --bg-gradient: radial-gradient(circle at center, #1f2937 0%, #111827 100%);
+            --glass-bg: rgba(17, 24, 39, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #f9fafb;
+            --text-muted: #9ca3af;
+            --accent: #10b981;
+            --yellow: #fcd34d;
+            --blue: #93c5fd;
+        }
+        
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background: var(--bg-gradient);
+            font-family: 'Inter', -apple-system, sans-serif;
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .screen {
+            text-align: center;
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .trophy {
+            font-size: 5rem;
+            margin-bottom: 1rem;
+            animation: bounce 1s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin: 0 0 0.5rem 0;
+            font-weight: 800;
+            color: var(--accent);
+            text-shadow: 0 0 20px rgba(16, 185, 129, 0.5);
+        }
+        
+        .winner-name {
+            font-size: 2rem;
+            color: var(--yellow);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+        
+        .time-score {
+            font-family: monospace;
+            font-size: 3rem;
+            color: var(--text-main);
+            margin: 2rem 0;
+            font-weight: bold;
+            background: rgba(252, 211, 77, 0.1);
+            padding: 1rem;
+            border-radius: 8px;
+        }
+        
+        p {
+            font-size: 1.125rem;
+            color: var(--text-muted);
+            margin: 1rem 0;
+        }
+        
+        .buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: #fff;
+            border: none;
+            border-radius: 9999px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn.primary {
+            background-color: var(--accent);
+            box-shadow: 0 4px 14px 0 rgba(16, 185, 129, 0.39);
+        }
+        
+        .btn.primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.5);
+        }
+        
+        .btn.secondary {
+            background-color: #6b7280;
+            box-shadow: 0 4px 14px 0 rgba(107, 114, 128, 0.39);
+        }
+        
+        .btn.secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 114, 128, 0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="screen">
+        <div class="trophy">🏆</div>
+        <h1>VICTORY!</h1>
+        <p class="winner-name">🟨 Yellow Player Wins!</p>
+        
+        <div class="time-score">00:23.456</div>
+        <p>Finish time in seconds</p>
+        
+        <div class="buttons">
+            <button class="btn primary">RESTART</button>
+            <button class="btn secondary">RECONNECT</button>
+        </div>
+    </div>
+</body>
+</html>

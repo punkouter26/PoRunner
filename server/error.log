@@ -1,0 +1,20 @@
+info: Microsoft.Hosting.Lifetime[14]
+      Now listening on: http://localhost:5000
+info: Microsoft.Hosting.Lifetime[0]
+      Application started. Press Ctrl+C to shut down.
+info: Microsoft.Hosting.Lifetime[0]
+      Hosting environment: Production
+info: Microsoft.Hosting.Lifetime[0]
+      Content root path: C:\Users\punko\Downloads\test1\server
+[Socket] User connected: vW72EXG6JBiAqGoo2tdPQA
+[Socket] User disconnected: vW72EXG6JBiAqGoo2tdPQA
+[Socket] User connected: 2Z9n9qhaKqPrnm9jGbCS2w
+[Socket] User disconnected: 2Z9n9qhaKqPrnm9jGbCS2w
+[Socket] User connected: sjMJUFYlVFzYfT4PibgoLQ
+[Socket] Player sjMJUFYlVFzYfT4PibgoLQ finished in 10049ms
+[Socket] Player sjMJUFYlVFzYfT4PibgoLQ finished in 802ms
+[Socket] User disconnected: sjMJUFYlVFzYfT4PibgoLQ
+[Socket] User connected: -adZxN09vlpgK1ACE9u3WA
+[Socket] User disconnected: -adZxN09vlpgK1ACE9u3WA
+[Socket] User connected: L88sDVO32Hnoo_jP9TMlpg
+[Socket] Player L88sDVO32Hnoo_jP9TMlpg finished in 9795ms

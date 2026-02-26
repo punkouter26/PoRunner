@@ -1,0 +1,49 @@
+erDiagram
+    GAME_ROOM ||--o{ PLAYER : contains
+    PLAYER ||--o{ GAME_STATE : has
+    ANIMATION ||--o{ SPRITE_ASSET : uses
+    
+    GAME_ROOM {
+        string roomId PK
+        string status "waiting|countdown|playing|gameover"
+        long countdownStartTimeMs FK
+        long raceStartTimeMs FK
+        string finishedPlayerId FK
+        int playerCount
+    }
+    
+    PLAYER {
+        string connectionId PK
+        string roomId FK
+        string name
+        enum playerColor "Red|Blue|Green|Yellow"
+        float positionX
+        float positionY
+        float velocityX
+        float velocityY
+        boolean isReady
+        boolean isFinished
+        long finishTimeMs
+    }
+    
+    GAME_STATE {
+        string playerId PK
+        enum currentAnimation "idle|walking|jumping"
+        enum direction "north|south|east|west"
+        long lastUpdateMs
+        float animationFrame
+    }
+    
+    ANIMATION {
+        string animationId PK
+        string name "walk|jumping-1"
+        int frameCount
+        float frameDuration
+    }
+    
+    SPRITE_ASSET {
+        string spriteId PK
+        string animationId FK
+        string direction FK
+        binary imageData "PNG base64"
+    }

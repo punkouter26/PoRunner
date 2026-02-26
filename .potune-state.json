@@ -1,0 +1,19 @@
+{
+    "project": "PoBananaGame",
+    "status": "Refactor Complete",
+    "workflow_state": "Validating",
+    "metrics": {
+        "pre": {
+            "fileCount": 16,
+            "lineCount": 10308
+        },
+        "post": {
+            "fileCount": 18,
+            "lineCount": 10420
+        },
+        "delta": {
+            "fileCount": 2,
+            "lineCount": 112
+        }
+    }
+}

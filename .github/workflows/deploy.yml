@@ -1,0 +1,121 @@
+# ─────────────────────────────────────────────────────────────────────────────
+# PoRunner — CI/CD: Provision & Deploy to Azure App Service
+#
+# SETUP (one-time, per repo):
+#   1. Create a service principal:
+#        az ad sp create-for-rbac \
+#          --name "sp-porunner-cicd" \
+#          --role Contributor \
+#          --scopes /subscriptions/bbb8dfbe-9169-432f-9b7a-fbf861b51037 \
+#          --sdk-auth
+#
+#   2. Copy the full JSON output and add it as a GitHub secret named AZURE_CREDENTIALS
+#      (Repo → Settings → Secrets and variables → Actions → New repository secret)
+#
+# TRIGGERS:
+#   - Push to main (auto-deploy)
+#   - Manual dispatch via GitHub UI (Actions → Run workflow)
+# ─────────────────────────────────────────────────────────────────────────────
+name: Deploy to Azure App Service
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+env:
+  AZURE_SUBSCRIPTION_ID: bbb8dfbe-9169-432f-9b7a-fbf861b51037
+  AZURE_RESOURCE_GROUP:  PoRunner
+  WEBAPP_NAME:           wa-porunner
+  DOTNET_VERSION:        '10.0.x'
+  NODE_VERSION:          '22'
+
+jobs:
+  # ── Job 1: Provision infrastructure (idempotent Bicep deployment) ──────────
+  provision:
+    name: Provision Infrastructure
+    runs-on: ubuntu-latest
+    outputs:
+      storage_account: ${{ steps.bicep.outputs.storageAccountName }}
+      webapp_url:      ${{ steps.bicep.outputs.webAppUrl }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy Bicep (what-if preview on PRs, apply on main)
+        id: bicep
+        run: |
+          OUTPUT=$(az deployment sub create \
+            --name "porunner-${{ github.run_number }}" \
+            --location westus2 \
+            --template-file infra/main.bicep \
+            --parameters infra/main.bicepparam \
+            --subscription ${{ env.AZURE_SUBSCRIPTION_ID }} \
+            --output json)
+
+          STORAGE=$(echo "$OUTPUT" | jq -r '.properties.outputs.storageAccountName.value')
+          URL=$(echo "$OUTPUT" | jq -r '.properties.outputs.webAppUrl.value')
+          echo "storageAccountName=$STORAGE" >> $GITHUB_OUTPUT
+          echo "webAppUrl=$URL"               >> $GITHUB_OUTPUT
+          echo "Storage account : $STORAGE"
+          echo "Web app URL     : $URL"
+
+  # ── Job 2: Build & Deploy application ─────────────────────────────────────
+  deploy:
+    name: Build & Deploy
+    runs-on: ubuntu-latest
+    needs: provision
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: client/package-lock.json
+
+      - name: Set up .NET ${{ env.DOTNET_VERSION }}
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Restore NuGet packages
+        run: dotnet restore server/Server.csproj
+
+      - name: Publish (.NET publishes + triggers npm build via MSBuild target)
+        # PublishRunWebpack target in Server.csproj runs:
+        #   npm install  (in client/)
+        #   npm run build  (Vite production build → client/dist/ → wwwroot/)
+        run: |
+          dotnet publish server/Server.csproj \
+            --configuration Release \
+            --runtime linux-x64 \
+            --self-contained false \
+            --output ${{ runner.temp }}/publish \
+            --nologo
+
+      - name: Log in to Azure
+        uses: azure/login@v2
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      - name: Deploy to Azure App Service
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name:    ${{ env.WEBAPP_NAME }}
+          package:     ${{ runner.temp }}/publish
+
+      - name: Print live URL
+        run: |
+          echo "========================================="
+          echo " DEPLOYED: ${{ needs.provision.outputs.webapp_url }}"
+          echo "========================================="

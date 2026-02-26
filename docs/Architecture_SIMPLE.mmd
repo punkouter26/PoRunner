@@ -1,0 +1,13 @@
+C4Context
+    title Banana Game - System Context (Simplified)
+    Person(player, "Player", "Browser")
+    System_Boundary(b1, "Banana Game") {
+        Container(client, "Frontend", "Vite + JS")
+        Container(server, "Backend", ".NET + SignalR")
+    }
+    Rel(player, client, "Interacts")
+    Rel(client, server, "State Sync")
+    style player fill:#e1f5ff,stroke:#01579b,color:#000
+    style b1 fill:#f3e5f5,stroke:#4a148c,color:#000
+    style client fill:#fff3e0,stroke:#e65100,color:#000
+    style server fill:#e8f5e9,stroke:#1b5e20,color:#000

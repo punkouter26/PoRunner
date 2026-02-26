@@ -1,0 +1,25 @@
+{
+  "hash": "65ab2d20",
+  "configHash": "f3e48c58",
+  "lockfileHash": "c6c5683f",
+  "browserHash": "226a225b",
+  "optimized": {
+    "socket.io-client": {
+      "src": "../../node_modules/socket.io-client/build/esm/index.js",
+      "file": "socket__io-client.js",
+      "fileHash": "ef77e66b",
+      "needsInterop": false
+    },
+    "socket.io": {
+      "src": "../../node_modules/socket.io/wrapper.mjs",
+      "file": "socket__io.js",
+      "fileHash": "86ccff47",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-R6FDRXB2": {
+      "file": "chunk-R6FDRXB2.js"
+    }
+  }
+}
