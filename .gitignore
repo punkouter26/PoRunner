@@ -54,4 +54,4 @@ appsettings.Development.json
 .terraform/
 *.tfstate
 *.tfstate.backup
-main.bicepparam
+# main.bicepparam removed from ignore to allow CI/CD to find it
