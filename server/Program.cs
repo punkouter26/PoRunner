@@ -39,7 +39,8 @@ builder.Services.AddCors(options =>
             builder.WithOrigins(
                        "http://localhost:5173", "http://127.0.0.1:5173",
                        "http://localhost:5174", "http://127.0.0.1:5174",
-                       "https://wa-porunner.azurewebsites.net")
+                       "https://wa-porunner.azurewebsites.net",
+                       "https://victorious-ocean-06635bc1e.6.azurestaticapps.net")
                    .AllowAnyHeader()
                    .AllowAnyMethod()
                    .AllowCredentials(); // Required for SignalR

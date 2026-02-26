@@ -61,8 +61,14 @@ function hideAllScreens() {
 }
 
 // Multiplayer Networking
+// Use relative URL for local dev, full URL for production
+const isProduction = window.location.hostname !== 'localhost' && !window.location.hostname.includes('127.0.0.1');
+const hubUrl = isProduction 
+    ? "https://wa-porunner.azurewebsites.net/gamehub" 
+    : "/gamehub";
+
 const connection = new signalR.HubConnectionBuilder()
-    .withUrl("/gamehub")
+    .withUrl(hubUrl)
     .configureLogging(signalR.LogLevel.Information)
     .build();
 
@@ -260,21 +266,22 @@ const loadImage = (img, src) => new Promise(resolve => {
 
 async function loadAssets() {
     const promises = [];
-    promises.push(loadImage(assets.sky, '/public/sky.png'));
-    promises.push(loadImage(assets.ground, '/public/ground.png'));
+    // Vite serves public folder files at root path, not /public/
+    promises.push(loadImage(assets.sky, '/sky.png'));
+    promises.push(loadImage(assets.ground, '/ground.png'));
 
     const dirs = ['south', 'west', 'east', 'north'];
     for (const dir of dirs) {
-        promises.push(loadImage(assets.idle[dir], `/public/man_dressed_in_banana_suit/rotations/${dir}.png`));
+        promises.push(loadImage(assets.idle[dir], `/man_dressed_in_banana_suit/rotations/${dir}.png`));
 
         for (let i = 0; i < 6; i++) {
             const img = new Image();
-            promises.push(loadImage(img, `/public/man_dressed_in_banana_suit/animations/walk/${dir}/frame_00${i}.png`));
+            promises.push(loadImage(img, `/man_dressed_in_banana_suit/animations/walk/${dir}/frame_00${i}.png`));
             assets.walk[dir].push(img);
         }
         for (let i = 0; i < 9; i++) {
             const img = new Image();
-            promises.push(loadImage(img, `/public/man_dressed_in_banana_suit/animations/jumping-1/${dir}/frame_00${i}.png`));
+            promises.push(loadImage(img, `/man_dressed_in_banana_suit/animations/jumping-1/${dir}/frame_00${i}.png`));
             assets.jump[dir].push(img);
         }
     }
