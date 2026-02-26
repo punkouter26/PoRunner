@@ -44,6 +44,16 @@ module poRunnerResources './modules/porunner.bicep' = {
   }
 }
 
+// ── PoRunner Static Web App ───────────────────────────────────────────────────
+module staticWebApp './modules/swa.bicep' = {
+  name: 'staticWebApp'
+  scope: poRunnerRg
+  params: {
+    location: location
+    swaName: 'swa-porunner'
+  }
+}
+
 // ── PoShared Key Vault: add secret + grant web app MI access ─────────────────
 // kv-poshared lives in PoShared group (eastus) — deployed as a separate module scope
 module kvSecrets './modules/kv-secrets.bicep' = {
@@ -57,5 +67,6 @@ module kvSecrets './modules/kv-secrets.bicep' = {
 
 // ── Outputs ──────────────────────────────────────────────────────────────────
 output webAppUrl string = poRunnerResources.outputs.webAppUrl
+output swaUrl string = 'https://${staticWebApp.outputs.swaDefaultHostname}'
 output storageAccountName string = poRunnerResources.outputs.storageAccountName
 output webAppPrincipalId string = poRunnerResources.outputs.webAppPrincipalId

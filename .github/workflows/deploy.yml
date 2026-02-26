@@ -38,6 +38,7 @@ jobs:
     outputs:
       storage_account: ${{ steps.bicep.outputs.storageAccountName }}
       webapp_url:      ${{ steps.bicep.outputs.webAppUrl }}
+      swa_url:         ${{ steps.bicep.outputs.swaUrl }}
 
     steps:
       - name: Checkout
@@ -61,10 +62,13 @@ jobs:
 
           STORAGE=$(echo "$OUTPUT" | jq -r '.properties.outputs.storageAccountName.value')
           URL=$(echo "$OUTPUT" | jq -r '.properties.outputs.webAppUrl.value')
+          SWA_URL=$(echo "$OUTPUT" | jq -r '.properties.outputs.swaUrl.value')
           echo "storageAccountName=$STORAGE" >> $GITHUB_OUTPUT
           echo "webAppUrl=$URL"               >> $GITHUB_OUTPUT
+          echo "swaUrl=$SWA_URL"               >> $GITHUB_OUTPUT
           echo "Storage account : $STORAGE"
           echo "Web app URL     : $URL"
+          echo "SWA URL         : $SWA_URL"
 
   # ── Job 2: Build & Deploy application ─────────────────────────────────────
   deploy:
@@ -114,8 +118,25 @@ jobs:
           app-name:    ${{ env.WEBAPP_NAME }}
           package:     ${{ runner.temp }}/publish
 
+      - name: Get SWA Deployment Token
+        id: swa-token
+        run: |
+          TOKEN=$(az staticwebapp secrets list --name swa-porunner --resource-group ${{ env.AZURE_RESOURCE_GROUP }} --query "properties.apiKey" -o tsv)
+          echo "token=$TOKEN" >> $GITHUB_OUTPUT
+
+      - name: Deploy to Azure Static Web App
+        uses: Azure/static-web-apps-deploy@v1
+        with:
+          azure_static_web_apps_api_token: ${{ steps.swa-token.outputs.token }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+          action: "upload"
+          app_location: "client"
+          output_location: "dist"
+          skip_app_build: false
+
       - name: Print live URL
         run: |
           echo "========================================="
-          echo " DEPLOYED: ${{ needs.provision.outputs.webapp_url }}"
+          echo " APP SERVICE DEPLOYED: ${{ needs.provision.outputs.webapp_url }}"
+          echo " SWA DEPLOYED:         ${{ needs.provision.outputs.swa_url }}"
           echo "========================================="
