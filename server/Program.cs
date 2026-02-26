@@ -58,6 +58,10 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Health Check endpoint for CI/CD and monitoring
+app.MapGet("/health", () => Results.Ok(new { status = "Healthy", timestamp = DateTime.UtcNow }));
+
 app.MapHub<GameHub>("/gamehub");
 app.MapFallbackToFile("index.html");
 
